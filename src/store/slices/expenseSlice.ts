@@ -9,11 +9,20 @@ export interface Expense {
   description?: string;
 }
 
+export interface Notification {
+  id: string;
+  message: string;
+  type: 'expense' | 'income' | 'warning';
+  timestamp: string;
+  isRead: boolean;
+}
+
 interface ExpenseState {
   expenses: Expense[];
   totalExpense: number;
   monthlyBudget: number;
   categories: string[];
+  notifications: Notification[];
 }
 
 const initialState: ExpenseState = {
@@ -26,7 +35,23 @@ const initialState: ExpenseState = {
   ],
   totalExpense: 290.99,
   monthlyBudget: 2000,
-  categories: ['Food', 'Transportation', 'Entertainment', 'Health', 'Shopping', 'Bills', 'Other'],
+  categories: ['Food', 'Transportation', 'Entertainment', 'Health', 'Shopping', 'Bills', 'Travel', 'Other'],
+  notifications: [
+    {
+      id: '1',
+      message: 'New expense added: Groceries - $150.50',
+      type: 'expense',
+      timestamp: '2024-01-15T10:30:00Z',
+      isRead: false,
+    },
+    {
+      id: '2',
+      message: 'Monthly budget warning: 85% used',
+      type: 'warning',
+      timestamp: '2024-01-14T15:45:00Z',
+      isRead: false,
+    },
+  ],
 };
 
 const expenseSlice = createSlice({
@@ -36,6 +61,16 @@ const expenseSlice = createSlice({
     addExpense: (state, action: PayloadAction<Expense>) => {
       state.expenses.push(action.payload);
       state.totalExpense += action.payload.amount;
+      
+      // Add notification for new expense
+      const notification: Notification = {
+        id: Date.now().toString(),
+        message: `New expense added: ${action.payload.title} - $${action.payload.amount.toFixed(2)}`,
+        type: 'expense',
+        timestamp: new Date().toISOString(),
+        isRead: false,
+      };
+      state.notifications.unshift(notification);
     },
     removeExpense: (state, action: PayloadAction<string>) => {
       const expense = state.expenses.find(exp => exp.id === action.payload);
@@ -54,8 +89,24 @@ const expenseSlice = createSlice({
     setBudget: (state, action: PayloadAction<number>) => {
       state.monthlyBudget = action.payload;
     },
+    markNotificationAsRead: (state, action: PayloadAction<string>) => {
+      const notification = state.notifications.find(n => n.id === action.payload);
+      if (notification) {
+        notification.isRead = true;
+      }
+    },
+    clearAllNotifications: (state) => {
+      state.notifications = [];
+    },
   },
 });
 
-export const { addExpense, removeExpense, updateExpense, setBudget } = expenseSlice.actions;
+export const { 
+  addExpense, 
+  removeExpense, 
+  updateExpense, 
+  setBudget, 
+  markNotificationAsRead, 
+  clearAllNotifications 
+} = expenseSlice.actions;
 export default expenseSlice.reducer;

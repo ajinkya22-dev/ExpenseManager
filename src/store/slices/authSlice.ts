@@ -4,6 +4,7 @@ interface User {
   id: string;
   email: string;
   name: string;
+  username: string;
 }
 
 interface AuthState {
@@ -38,8 +39,17 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.isLoading = false;
     },
+    updateProfile: (state, action: PayloadAction<Partial<User>>) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      }
+    },
+    changePassword: (state) => {
+      // Password change logic would be handled by backend
+      // This is just for UI feedback
+    },
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout } = authSlice.actions;
+export const { loginStart, loginSuccess, loginFailure, logout, updateProfile, changePassword } = authSlice.actions;
 export default authSlice.reducer;

@@ -6,10 +6,13 @@ import { ExpenseChart } from "@/components/dashboard/ExpenseChart";
 import { ExpenseOverview } from "@/components/dashboard/ExpenseOverview";
 import { RecentTransactions } from "@/components/dashboard/RecentTransactions";
 import { QuickActions } from "@/components/dashboard/QuickActions";
+import { AddExpenseDialog } from "@/components/dashboard/AddExpenseDialog";
 import { DollarSign, TrendingUp, CreditCard, Wallet } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Dashboard() {
   const { expenses, totalExpense, monthlyBudget } = useSelector((state: RootState) => state.expenses);
+  const { user } = useAuth();
   
   const remainingBudget = monthlyBudget - totalExpense;
   const budgetUsedPercentage = (totalExpense / monthlyBudget) * 100;
@@ -24,9 +27,12 @@ export default function Dashboard() {
       <main className="flex-1 overflow-y-auto">
         <div className="p-6 space-y-6">
           {/* Header */}
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold">Dashboard</h1>
-            <p className="text-muted-foreground">Welcome back! Here's your financial overview.</p>
+          <div className="flex items-center justify-between">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold">Hello, {user?.username || user?.name || 'User'}! 👋</h1>
+              <p className="text-muted-foreground">Welcome back! Here's your financial overview.</p>
+            </div>
+            <AddExpenseDialog />
           </div>
 
           {/* Stats Cards */}

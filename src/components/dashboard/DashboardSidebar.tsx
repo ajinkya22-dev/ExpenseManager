@@ -6,7 +6,6 @@ import {
   PieChart,
   TrendingUp,
   CreditCard,
-  Settings,
   LogOut,
   User,
   Bell,
@@ -16,7 +15,10 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 import { cn } from "@/lib/utils";
 
 const menuItems = [
@@ -29,13 +31,15 @@ const menuItems = [
   { icon: FileText, label: "Reports", path: "/dashboard/reports" },
   { icon: Bell, label: "Notifications", path: "/dashboard/notifications" },
   { icon: User, label: "Profile", path: "/dashboard/profile" },
-  { icon: Settings, label: "Settings", path: "/dashboard/settings" },
 ];
 
 export function DashboardSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
   const { signOut, user } = useAuth();
+  const { notifications } = useSelector((state: RootState) => state.expenses);
+
+  const unreadCount = notifications.filter(n => !n.isRead).length;
 
   const handleLogout = () => {
     signOut();
@@ -80,7 +84,7 @@ export function DashboardSidebar() {
             to={item.path}
             className={({ isActive }) =>
               cn(
-                "flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200",
+                "flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200 relative",
                 isActive
                   ? "bg-primary text-primary-foreground shadow-soft"
                   : "hover:bg-muted text-muted-foreground hover:text-foreground",
@@ -90,6 +94,17 @@ export function DashboardSidebar() {
           >
             <item.icon className="h-5 w-5" />
             {!isCollapsed && <span className="text-sm font-medium">{item.label}</span>}
+            {item.label === "Notifications" && unreadCount > 0 && (
+              <Badge 
+                variant="destructive" 
+                className={cn(
+                  "h-5 w-5 flex items-center justify-center p-0 text-xs",
+                  isCollapsed ? "absolute -top-1 -right-1" : ""
+                )}
+              >
+                {unreadCount}
+              </Badge>
+            )}
           </NavLink>
         ))}
       </nav>
@@ -103,7 +118,7 @@ export function DashboardSidebar() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">{user.name}</p>
-              <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+              <p className="text-xs text-muted-foreground truncate">@{user.username}</p>
             </div>
           </div>
         )}

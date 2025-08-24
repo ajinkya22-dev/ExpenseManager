@@ -17,6 +17,7 @@ export const useAuth = () => {
         id: '1',
         email,
         name: email.split('@')[0],
+        username: email.split('@')[0].toLowerCase(),
       };
       
       dispatch(loginSuccess(userData));
@@ -37,6 +38,7 @@ export const useAuth = () => {
         id: '1',
         email,
         name,
+        username: email.split('@')[0].toLowerCase(),
       };
       
       dispatch(loginSuccess(userData));
