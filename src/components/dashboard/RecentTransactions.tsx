@@ -7,7 +7,7 @@ import { format } from "date-fns";
 export function RecentTransactions() {
   const { expenses } = useSelector((state: RootState) => state.expenses);
   
-  const recentExpenses = expenses
+  const recentExpenses = [...expenses]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 5);
 
