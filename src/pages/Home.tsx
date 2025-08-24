@@ -61,7 +61,7 @@ export default function Home() {
             <h2 className="text-4xl font-bold mb-4">Powerful Features</h2>
             <p className="text-xl text-muted-foreground">Everything you need to manage your finances effectively</p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="gradient-card shadow-soft hover:shadow-medium transition-all duration-300 animate-float">
               <CardHeader>
@@ -165,7 +165,7 @@ export default function Home() {
             <span className="font-bold text-xl">SpendFlow</span>
           </div>
           <p className="text-muted-foreground">
-            © 2024 SpendFlow. All rights reserved. Built with love for better financial management.
+            © 2024 SpendFlow Ajinkya Pathak.
           </p>
         </div>
       </footer>
